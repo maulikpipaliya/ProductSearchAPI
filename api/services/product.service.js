@@ -9,7 +9,15 @@ import {
 
 import { productData } from "../../models/productsDataDump.js";
 
+/**
+ * Product Service class which serves static methods to segragate request handling and business logic
+ */
 export default class ProductService {
+    /**
+     * Get product by id
+     * @param {*} productId
+     * @returns
+     */
     static async getProductById(productId) {
         try {
             const productFound = await productModel.findOne({
@@ -24,6 +32,10 @@ export default class ProductService {
         }
     }
 
+    /**
+     * Get all products
+     * @returns All Products or Error with Message
+     */
     static async getProducts() {
         try {
             const products = await productModel.find({
@@ -41,6 +53,12 @@ export default class ProductService {
         }
     }
 
+    /**
+     * Adds a product to database by fetching random object from product dump for now
+     *
+     * @returns Product Object
+     * @description In Future, this can have POST Request Body handling as well.
+     */
     static async addProduct() {
         const productId = getRandomId();
 
@@ -68,6 +86,11 @@ export default class ProductService {
         }
     }
 
+    /**
+     * Soft Deletes the product by setting status to INACTIVE
+     * @param {*} productId
+     * @returns
+     */
     static async setProductInactive(productId) {
         try {
             const productFound = await productModel.findOneAndUpdate(
@@ -87,6 +110,11 @@ export default class ProductService {
         }
     }
 
+    /**
+     * Accepts filters from Query Params from Request and then accordingly adds filters to the result.
+     * @param {*} filters
+     * @returns
+     */
     static async searchProduct(filters) {
         console.log(filters);
 
@@ -161,6 +189,10 @@ export default class ProductService {
                 rating: { $lt: parseInt(maxRating) },
             });
         }
+
+        /**
+         * Can add multiple conditions here as per requirements
+         */
 
         try {
             const filteredProducts = await productModel.aggregate(query);
